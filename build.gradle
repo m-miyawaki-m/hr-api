@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.diffplug.spotless' version '6.25.0' // ← コードフォーマッター
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // --- 本体 ---
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    implementation 'com.oracle.database.jdbc:ojdbc11:23.3.0.23.09'
+
+    // --- Lombok ---
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // --- テスト関連 ---
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    testImplementation 'org.assertj:assertj-core:3.25.3' // ← アサーション強化
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+spotless {
+    java {
+        googleJavaFormat('1.17.0')
+        target 'src/**/*.java'
+        importOrder 'java', 'javax', 'org', 'com'
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    // --- XML整形用 ---
+    format 'xml', {
+        target 'src/main/resources/**/*.xml'
+        // MyBatisのMapper XMLは除外
+        targetExclude 'src/main/resources/mybatis/**/*.xml'
+        eclipseWtp('xml')
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    // --- HTML / JS / CSS 用 Prettier 設定 ---
+    format 'web', {
+        target 'src/main/resources/static/**/*.html',
+               'src/main/resources/static/**/*.js',
+               'src/main/resources/static/**/*.css'
+        prettier().configFile('.prettierrc.json') // ← ここを修正！
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}

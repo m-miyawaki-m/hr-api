@@ -1,0 +1,61 @@
+# Gradle build
+/build/
+!/build.gradle
+!/settings.gradle
+.gradle/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+
+# VSCode
+.vscode/
+
+# OS/その他
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Generated files
+out/
+
+# Dependency directories
+/node_modules/
+
+# Static analysis
+spotless/
+spotless-*/
+
+# Environment
+.env
+
+# Others
+*.db
+*.sqlite
+
+# Ignore test output
+/test-output/
+
+# Ignore temporary files
+/tmp/
+
+# Ignore coverage reports
+/coverage/
+
+# Ignore target (Maven)
+/target/

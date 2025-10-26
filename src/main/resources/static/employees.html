@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <title>Employee List</title>
+        <link rel="stylesheet" href="css/employees.css" />
+    </head>
+    <body>
+        <h1>Employee List</h1>
+        <div style="margin-bottom: 16px">
+            <input type="text" id="searchInput" placeholder="従業員名やIDで検索" />
+            <button id="searchButton">検索</button>
+        </div>
+        <div id="status" class="loading">Loading data...</div>
+        <table id="employeeTable" style="display: none">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Salary</th>
+                    <th>Department</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        <link rel="stylesheet" href="css/employees.css" />
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+        <script src="js/employees.js"></script>
+    </body>
+</html>
