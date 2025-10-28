@@ -3,6 +3,8 @@ plugins {
     id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'com.diffplug.spotless' version '6.25.0' // ← コードフォーマッター
+    id 'jacoco' // ← テストカバレッジ
+    id 'org.owasp.dependencycheck' version '10.0.4' // ← 依存関係脆弱性チェック
 }
 
 group = 'com.example'
@@ -35,15 +37,70 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
     testImplementation 'org.assertj:assertj-core:3.25.3' // ← アサーション強化
+    testImplementation 'com.h2database:h2:2.2.224' // ← テスト用インメモリDB
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // ← テスト実行後にカバレッジレポート生成
+}
+
+// JaCoCo テストカバレッジの設定
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+    dependsOn test // ← テスト実行を依存関係とする
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    executionData fileTree(dir: "$buildDir/jacoco", includes: ["**/*.exec"])
+}
+
+// テストカバレッジの最小基準を設定
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70 // 70%以上のカバレッジを要求
+            }
+        }
+    }
+}
+
+// OWASP Dependency Check設定
+dependencyCheck {
+    format = 'ALL'
+    outputDirectory = "$buildDir/reports/dependency-check"
+    suppressionFile = 'dependency-check-suppressions.xml'
+    failBuildOnCVSS = 7.0 // CVSS 7.0以上で失敗
+    analyzers {
+        // 使用しないアナライザーを無効化してパフォーマンス向上
+        nodeAuditEnabled = false
+        nodeEnabled = false
+        composerEnabled = false
+        pyDistributionEnabled = false
+        pyPackageEnabled = false
+        rubygemsEnabled = false
+        bundleAuditEnabled = false
+        assemblyEnabled = false
+        nuspecEnabled = false
+        nugetconfEnabled = false
+        cocoapodsEnabled = false
+        swiftEnabled = false
+        archiveEnabled = false
+        jarEnabled = true
+        centralEnabled = true
+        ossIndexEnabled = true
+    }
 }
 
 spotless {
     java {
-        googleJavaFormat('1.17.0')
+        googleJavaFormat('1.19.2')
         target 'src/**/*.java'
         importOrder 'java', 'javax', 'org', 'com'
         removeUnusedImports()

@@ -1,0 +1,43 @@
+# テスト環境用設定
+
+# データベース設定（テスト用インメモリDB）
+spring:
+    datasource:
+        url: jdbc:h2:mem:testdb
+        driver-class-name: org.h2.Driver
+        username: sa
+        password: password
+
+    # H2データベース設定
+    h2:
+        console:
+            enabled: true
+
+    # JPA設定
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: create-drop
+        show-sql: true
+        defer-datasource-initialization: true
+
+    # SQL初期化設定
+    sql:
+        init:
+            mode: always
+
+# MyBatis設定
+mybatis:
+    mapper-locations: classpath:mybatis/*.xml
+    type-aliases-package: com.example.hrapp.model
+    configuration:
+        map-underscore-to-camel-case: true
+
+# ログ設定
+logging:
+    level:
+        '[com.example.hrapp]': DEBUG
+        '[org.springframework.web]': DEBUG
+        '[org.mybatis]': DEBUG
+    pattern:
+        console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'

@@ -1,0 +1,51 @@
+name: Security Scan
+
+# セキュリティスキャンの実行トリガー
+on:
+    # 毎週月曜日の午前9時（JST）に実行
+    schedule:
+        - cron: "0 0 * * 1" # UTC時間
+    # 手動実行を許可
+    workflow_dispatch:
+    # mainブランチへのpush時
+    push:
+        branches: [main]
+
+jobs:
+    dependency-check:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with:
+                  java-version: "17"
+                  distribution: "temurin"
+
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+
+            # 依存関係の脆弱性スキャン
+            - name: Run dependency vulnerability scan
+              run: ./gradlew dependencyCheckAnalyze
+              continue-on-error: true
+
+            # OWASP Dependency Checkレポートのアップロード
+            - name: Upload dependency check reports
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: dependency-check-reports
+                  path: build/reports/
+                  retention-days: 30
+
+            # GitHub Security Advisoriesとの照合
+            - name: GitHub Security Advisory sync
+              uses: github/codeql-action/upload-sarif@v3
+              if: always()
+              with:
+                  sarif_file: build/reports/dependency-check-report.sarif
+              continue-on-error: true
