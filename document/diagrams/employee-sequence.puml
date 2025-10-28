@@ -55,6 +55,9 @@ alt Found
 else Not Found
   S --> C : null
   C --> U : 404 Not Found
+  deactivate M
+  deactivate S
+  deactivate C
 end
 
 
