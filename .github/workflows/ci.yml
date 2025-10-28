@@ -83,8 +83,10 @@ jobs:
                   files: |
                       build/test-results/test/*.xml
                   check_name: "Test Results"
-                  comment_mode: create new
+                  comment_mode: changes
                   fail_on: "test failures"
+                  action_fail: false
+                  report_individual_runs: true
 
             # Gradleビルドの実行
             - name: Build with Gradle
