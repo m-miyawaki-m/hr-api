@@ -25,41 +25,43 @@ import com.example.hrapp.service.EmployeeService;
 @WebMvcTest(EmployeeController.class)
 class EmployeeControllerTest {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @MockitoBean private EmployeeService employeeService;
+    @MockitoBean
+    private EmployeeService employeeService;
 
-  private Employee employee1;
-  private Employee employee2;
-  private List<Employee> employeeList;
+    private Employee employee1;
+    private Employee employee2;
+    private List<Employee> employeeList;
 
-  @BeforeEach
-  void setUp() {
-    // テストデータの準備
-    employee1 = new Employee();
-    employee1.setEmployeeId(1);
-    employee1.setFirstName("John");
-    employee1.setLastName("Doe");
-    employee1.setEmail("john.doe@example.com");
-    employee1.setPhoneNumber("123-456-7890");
-    employee1.setJobId("IT_PROG");
-    employee1.setSalary(new BigDecimal("50000"));
-    employee1.setDepartmentId(10);
+    @BeforeEach
+    void setUp() {
+        // テストデータの準備
+        employee1 = new Employee();
+        employee1.setEmployeeId(1);
+        employee1.setFirstName("John");
+        employee1.setLastName("Doe");
+        employee1.setEmail("john.doe@example.com");
+        employee1.setPhoneNumber("123-456-7890");
+        employee1.setJobId("IT_PROG");
+        employee1.setSalary(new BigDecimal("50000"));
+        employee1.setDepartmentId(10);
 
-    employee2 = new Employee();
-    employee2.setEmployeeId(2);
-    employee2.setFirstName("Jane");
-    employee2.setLastName("Smith");
-    employee2.setEmail("jane.smith@example.com");
-    employee2.setPhoneNumber("098-765-4321");
-    employee2.setJobId("SA_REP");
-    employee2.setSalary(new BigDecimal("45000"));
-    employee2.setDepartmentId(20);
+        employee2 = new Employee();
+        employee2.setEmployeeId(2);
+        employee2.setFirstName("Jane");
+        employee2.setLastName("Smith");
+        employee2.setEmail("jane.smith@example.com");
+        employee2.setPhoneNumber("098-765-4321");
+        employee2.setJobId("SA_REP");
+        employee2.setSalary(new BigDecimal("45000"));
+        employee2.setDepartmentId(20);
 
-    employeeList = Arrays.asList(employee1, employee2);
-  }
+        employeeList = Arrays.asList(employee1, employee2);
+    }
 
-  @Test
+    @Test
   @DisplayName("全従業員取得API - 正常系")
   void testGetAll_Success() throws Exception {
     // Mock設定
@@ -80,7 +82,7 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$[1].lastName").value("Smith"));
   }
 
-  @Test
+    @Test
   @DisplayName("全従業員取得API - 空のリストの場合")
   void testGetAll_EmptyList() throws Exception {
     // Mock設定
@@ -95,7 +97,7 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.length()").value(0));
   }
 
-  @Test
+    @Test
   @DisplayName("ID指定従業員取得API - 正常系")
   void testGetById_Success() throws Exception {
     // Mock設定
@@ -116,7 +118,7 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.departmentId").value(10));
   }
 
-  @Test
+    @Test
   @DisplayName("ID指定従業員取得API - 存在しないIDの場合")
   void testGetById_NotFound() throws Exception {
     // Mock設定
@@ -128,7 +130,7 @@ class EmployeeControllerTest {
         .andExpect(status().isNotFound());
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索API - 正常系")
   void testGetByName_Success() throws Exception {
     // Mock設定
@@ -147,7 +149,7 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$[0].lastName").value("Doe"));
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索API - 該当なしの場合")
   void testGetByName_NoMatches() throws Exception {
     // Mock設定
@@ -165,7 +167,7 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.length()").value(0));
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索API - 複数件ヒットの場合")
   void testGetByName_MultipleMatches() throws Exception {
     // Mock設定

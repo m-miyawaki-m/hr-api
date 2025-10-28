@@ -23,41 +23,43 @@ import com.example.hrapp.model.Employee;
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
 
-  @Mock private EmployeeMapper employeeMapper;
+    @Mock
+    private EmployeeMapper employeeMapper;
 
-  @InjectMocks private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeService employeeService;
 
-  private Employee employee1;
-  private Employee employee2;
-  private List<Employee> employeeList;
+    private Employee employee1;
+    private Employee employee2;
+    private List<Employee> employeeList;
 
-  @BeforeEach
-  void setUp() {
-    // テストデータの準備
-    employee1 = new Employee();
-    employee1.setEmployeeId(1);
-    employee1.setFirstName("John");
-    employee1.setLastName("Doe");
-    employee1.setEmail("john.doe@example.com");
-    employee1.setPhoneNumber("123-456-7890");
-    employee1.setJobId("IT_PROG");
-    employee1.setSalary(new BigDecimal("50000"));
-    employee1.setDepartmentId(10);
+    @BeforeEach
+    void setUp() {
+        // テストデータの準備
+        employee1 = new Employee();
+        employee1.setEmployeeId(1);
+        employee1.setFirstName("John");
+        employee1.setLastName("Doe");
+        employee1.setEmail("john.doe@example.com");
+        employee1.setPhoneNumber("123-456-7890");
+        employee1.setJobId("IT_PROG");
+        employee1.setSalary(new BigDecimal("50000"));
+        employee1.setDepartmentId(10);
 
-    employee2 = new Employee();
-    employee2.setEmployeeId(2);
-    employee2.setFirstName("Jane");
-    employee2.setLastName("Smith");
-    employee2.setEmail("jane.smith@example.com");
-    employee2.setPhoneNumber("098-765-4321");
-    employee2.setJobId("SA_REP");
-    employee2.setSalary(new BigDecimal("45000"));
-    employee2.setDepartmentId(20);
+        employee2 = new Employee();
+        employee2.setEmployeeId(2);
+        employee2.setFirstName("Jane");
+        employee2.setLastName("Smith");
+        employee2.setEmail("jane.smith@example.com");
+        employee2.setPhoneNumber("098-765-4321");
+        employee2.setJobId("SA_REP");
+        employee2.setSalary(new BigDecimal("45000"));
+        employee2.setDepartmentId(20);
 
-    employeeList = Arrays.asList(employee1, employee2);
-  }
+        employeeList = Arrays.asList(employee1, employee2);
+    }
 
-  @Test
+    @Test
   @DisplayName("全従業員取得 - 正常系")
   void testGetAll_Success() {
     // Mock設定
@@ -74,7 +76,7 @@ class EmployeeServiceTest {
     assertThat(result.get(1).getFirstName()).isEqualTo("Jane");
   }
 
-  @Test
+    @Test
   @DisplayName("全従業員取得 - 空のリストの場合")
   void testGetAll_EmptyList() {
     // Mock設定
@@ -87,7 +89,7 @@ class EmployeeServiceTest {
     assertThat(result).isNotNull().isEmpty();
   }
 
-  @Test
+    @Test
   @DisplayName("ID指定従業員取得 - 正常系")
   void testGetById_Success() {
     // Mock設定
@@ -108,7 +110,7 @@ class EmployeeServiceTest {
     assertThat(result.getDepartmentId()).isEqualTo(10);
   }
 
-  @Test
+    @Test
   @DisplayName("ID指定従業員取得 - 存在しないIDの場合")
   void testGetById_NotFound() {
     // Mock設定
@@ -121,7 +123,7 @@ class EmployeeServiceTest {
     assertThat(result).isNull();
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索 - 正常系（1件ヒット）")
   void testGetByName_SingleMatch() {
     // Mock設定
@@ -136,7 +138,7 @@ class EmployeeServiceTest {
     assertThat(result.get(0).getFirstName()).isEqualTo("John");
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索 - 正常系（複数件ヒット）")
   void testGetByName_MultipleMatches() {
     // Mock設定
@@ -151,7 +153,7 @@ class EmployeeServiceTest {
     assertThat(result.get(1).getFirstName()).isEqualTo("Jane");
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索 - 該当なしの場合")
   void testGetByName_NoMatches() {
     // Mock設定
@@ -164,7 +166,7 @@ class EmployeeServiceTest {
     assertThat(result).isNotNull().isEmpty();
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索 - 空文字列の場合")
   void testGetByName_EmptyString() {
     // Mock設定
@@ -177,7 +179,7 @@ class EmployeeServiceTest {
     assertThat(result).isNotNull().isEmpty();
   }
 
-  @Test
+    @Test
   @DisplayName("名前検索 - 部分一致の場合")
   void testGetByName_PartialMatch() {
     // Mock設定

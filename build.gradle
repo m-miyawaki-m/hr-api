@@ -100,12 +100,19 @@ dependencyCheck {
 
 spotless {
     java {
-        googleJavaFormat('1.19.2')
+        // Eclipseフォーマッターで4スペースインデント
+        eclipse('4.26')
         target 'src/**/*.java'
         importOrder 'java', 'javax', 'org', 'com'
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
+        // 4スペースインデントを強制
+        custom 'indent', {
+            it.replaceAll('(?m)^(\\t+)', { match ->
+                '    ' * match[1].length()
+            })
+        }
     }
 
     // --- XML整形用 ---

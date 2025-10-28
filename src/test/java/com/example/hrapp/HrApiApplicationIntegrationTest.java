@@ -15,13 +15,14 @@ import com.example.hrapp.mapper.EmployeeMapper;
 @ActiveProfiles("test")
 class HrApiApplicationIntegrationTest {
 
-  @MockitoBean private EmployeeMapper employeeMapper;
+    @MockitoBean
+    private EmployeeMapper employeeMapper;
 
-  @Test
-  @DisplayName("Spring Contextロードテスト")
-  void contextLoads() {
-    // コンテキストが正常にロードされることを確認
-    // このテストメソッドが実行されることで、Spring Bootアプリケーションが正常に起動することを確認
-    assertThat(employeeMapper).isNotNull();
-  }
+    @Test
+    @DisplayName("Spring Contextロードテスト")
+    void contextLoads() {
+        // コンテキストが正常にロードされることを確認
+        // このテストメソッドが実行されることで、Spring Bootアプリケーションが正常に起動することを確認
+        assertThat(employeeMapper).isNotNull();
+    }
 }
