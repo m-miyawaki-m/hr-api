@@ -11,6 +11,12 @@ on:
     # 手動実行を許可
     workflow_dispatch:
 
+# 権限の設定
+permissions:
+    contents: read
+    checks: write
+    pull-requests: write
+
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -20,11 +26,11 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            # Java 17のセットアップ
-            - name: Set up JDK 17
+            # Java 21のセットアップ
+            - name: Set up JDK 21
               uses: actions/setup-java@v4
               with:
-                  java-version: "17"
+                  java-version: "21"
                   distribution: "temurin"
 
             # Gradleの実行権限を付与
@@ -76,6 +82,9 @@ jobs:
               with:
                   files: |
                       build/test-results/test/*.xml
+                  check_name: "Test Results"
+                  comment_mode: create new
+                  fail_on: "test failures"
 
             # Gradleビルドの実行
             - name: Build with Gradle
@@ -98,10 +107,10 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Set up JDK 17
+            - name: Set up JDK 21
               uses: actions/setup-java@v4
               with:
-                  java-version: "17"
+                  java-version: "21"
                   distribution: "temurin"
 
             - name: Grant execute permission for gradlew
