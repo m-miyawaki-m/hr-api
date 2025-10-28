@@ -10,6 +10,9 @@
 *.war
 *.ear
 
+# Exception: Keep Gradle wrapper jar
+!gradle/wrapper/gradle-wrapper.jar
+
 # IDE
 .idea/
 *.iml
