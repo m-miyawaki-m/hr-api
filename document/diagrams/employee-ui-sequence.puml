@@ -1,0 +1,67 @@
+@startuml Employee UI Sequence
+' Visual
+skinparam monochrome true
+skinparam participantPadding 20
+skinparam shadowing false
+skinparam ArrowThickness 1
+skinparam sequenceMessageAlign center
+
+' Roles
+actor User as U
+boundary "Employees.html\n(Employees page)" as Page
+control "employees.js" as JS
+participant "EmployeeController\n(/api/employees)" as C
+
+' Page Load: list all employees
+U -> Page : Open Employees page
+activate Page
+Page -> JS : DOMContentLoaded / $(function)
+activate JS
+JS -> JS : loadEmployees()
+JS -> C : GET /api/employees
+alt 200 OK (array)
+  C --> JS : [Employee]
+  JS -> JS : renderEmployeeTable([])
+  JS --> Page : Update table + hide status
+else 4xx/5xx
+  C --> JS : error (status)
+  JS -> Page : Show status "Error loading employees"
+end
+
+' Search action (click or Enter)
+U -> Page : Click Search / Press Enter
+Page -> JS : search()
+activate JS
+JS -> JS : build URL
+alt query is empty
+  JS -> C : GET /api/employees
+  C --> JS : [Employee]
+  JS -> JS : renderEmployeeTable([])
+  JS --> Page : Update table
+else query exists
+  JS -> C : GET /api/employees/{query}
+  alt 200 OK (single or array)
+    C --> JS : Employee | [Employee]
+    JS -> JS : normalize to array
+    JS -> JS : renderEmployeeTable([])
+    JS --> Page : Update table
+  else 404 Not Found
+    C --> JS : 404
+    JS -> Page : Dialog "該当なし"
+  else 500 Server Error
+    C --> JS : 500
+    JS -> Page : Dialog "サーバーエラー"
+  else Other Error
+    C --> JS : status = X
+    JS -> Page : Dialog "エラー X"
+  end
+end
+
+' Notes
+note over JS
+- fetch() を使用
+- 返却が配列/単体を正規化
+- エラーごとにダイアログ表示
+end note
+
+@enduml

@@ -1,0 +1,95 @@
+@startuml Employee API Sequence
+' Title and legend
+skinparam monochrome true
+skinparam participantPadding 20
+skinparam shadowing false
+skinparam ArrowThickness 1
+skinparam sequenceMessageAlign center
+
+title Employee API - Sequence Diagram
+legend right
+  Tech stack:
+  - Spring Boot 3.5.x (Java 21)
+  - Controller -> Service -> MyBatis Mapper -> DB
+  - Endpoints: GET /employees, GET /employees/{id}, GET /employees/search?name=
+endlegend
+
+actor User as U
+participant "EmployeeController" as C
+participant "EmployeeService" as S
+participant "EmployeeMapper\n(MyBatis)" as M
+database "RDBMS" as DB
+
+' ========== GET /employees ==========
+U -> C : GET /employees
+activate C
+C -> S : getAll()
+activate S
+S -> M : findAll()
+activate M
+M -> DB : SELECT * FROM employees
+DB --> M : ResultSet
+M --> S : List<Employee>
+S --> C : List<Employee>
+C --> U : 200 OK (JSON array)
+deactivate M
+deactivate S
+deactivate C
+
+' ========== GET /employees/{id} ==========
+U -> C : GET /employees/{id}
+activate C
+C -> S : getById(id)
+activate S
+S -> M : findById(id)
+activate M
+M -> DB : SELECT * FROM employees WHERE id = ?
+DB --> M : Employee | null
+M --> S : Employee | null
+alt Found
+  S --> C : Employee
+  C --> U : 200 OK (JSON)
+  deactivate M
+  deactivate S
+  deactivate C
+else Not Found
+  S --> C : null
+  C --> U : 404 Not Found
+end
+
+
+
+' ========== GET /employees/search?name= ==========
+U -> C : GET /employees/search?name={q}
+activate C
+C -> S : getByName(name)
+activate S
+S -> M : selectByName(name)
+activate M
+M -> DB : SELECT * FROM employees WHERE name LIKE '%'||?||'%'
+DB --> M : ResultSet
+M --> S : List<Employee>
+S --> C : List<Employee>
+C --> U : 200 OK (JSON array)
+
+' Annotations and notes
+note over C
+  @RestController
+  @RequestMapping("/employees")
+  @CrossOrigin
+end note
+
+note over S
+  @Service
+  ログ出力あり:
+  - getAll()
+  - getById(id)
+  - getByName(name)
+end note
+
+note over M
+  @Mapper (MyBatis)
+  SQLは XML (EmployeeMapper.xml) に定義
+end note
+
+@enduml
